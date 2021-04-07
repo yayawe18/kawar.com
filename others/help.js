@@ -6,145 +6,43 @@ const {
 } = require(`../config.json`);
 const db = require('quick.db');
 
+
 module.exports = {
-  name: `help`,
-  description: "(h)Gives you a list of all help Commands",
-  aliases: ["h","commands"],
-  cooldown: 3,
-  edesc: "Type help to get a short preview of all Commands, Type help <COMMANDNAME> to get extended information about this one command!",
-  async execute(message,args,client) {
-
-    let prefix = await db.get(`prefix_${message.guild.id}`)
-    if(prefix === null) prefix = PREFIX;
-    //react with approve emoji
-    message.react("769665713124016128");
-    //define the commands as a command
+  name: "help",
+  aliases: ["h"],
+  cooldown: 8,
+  description: "**all commands**",
+  execute(message) {
     let commands = message.client.commands.array();
-    //define the help embed
+
     let helpEmbed = new MessageEmbed()
-      .setTitle(`List of all commands`)
-      .setDescription("__**```List of all commands```**__")
-       .setImage('https://cdn.discordapp.com/attachments/770233044392607776/788173412123934720/ab45bb4451536652faca51ae4f42d5dd.gif')
-       .setFooter(message.author.username, message.author.displayAvatarURL)
-       .setDescription(`**[  SUPPORT  ](https://discord.gg/AQgmEJ2)**   -  [   INVITE   ](https://discordapp.com/oauth2/authorize?client_id=743085172085358683&scope=bot&permissions=8)`)
-      .setThumbnail(message.author.avatarURL)
-      .setColor('RANDOM');
-    //define argstrue to negative
-    let ifargstruedothis = -1;
+.setThumbnail(message.author.avatarURL({dynamic: "true"}))
+    .setThumbnail(message.author.avatarURL())
+    .setDescription(`
+ ≪  __**Prefix Bot d!**__  ≫
+ __**command-music**__
+d!play - d!skip - d!skipto
+d!stop - d!volume - d!nowplaying
+d!shuffle - d!search - d!resume
+d!remove - d!queue - d!filter
+d!loop - d!lyrics - d!radio
+    __**Filter Commands**__
+ d!fi 8D -  d!fi tremolo
+ d!fi vibrato -  d!fi pulsator
+ d!fi clear   -  d!fi bassboost
+      d!fi vaporwave 
+       __**Others**__ 
+       d!help - d!ping
+     d!prefix  - d!uptime 
+__**LINKS**__
+__. [SUPPORT](https://discord.gg/Ncrb9sfh7n) -   [WEBSITE](https://discord-music-kurd.kurdmore.repl.co)    -    [INVITE](https://discord.com/api/oauth2/authorize?client_id=779464107739971646&permissions=8&scope=bot).__
+`)
 
-      switch(args[0]){
-          case "filter":
-           ifargstruedothis=0;
-          break;
-          case "loop":
-            ifargstruedothis=1;
-          break;
-          case "lyrics":
-            ifargstruedothis=2
-          break;
-          case "nowplaying":
-            ifargstruedothis=3
-          break;
-          case "pause":
-            ifargstruedothis=4
-          break;
-          case "play":
-            ifargstruedothis=5
-          break;
-          case "playlist":
-            ifargstruedothis=6
-          break;
-          case "queue":
-            ifargstruedothis=7
-          break;
-          case "radio":
-            ifargstruedothis=8
-          break;
-          case "remove":
-            ifargstruedothis=9
-          break;
-          case "resume":
-            ifargstruedothis=10
-          break;
-          case "search":
-            ifargstruedothis=11
-          break;
-          case "shuffle":
-            ifargstruedothis=12
-          break;
-          case "skip":
-            ifargstruedothis=13
-          break;
-          case "skipto":
-            ifargstruedothis=14
-          break;
-          case "stop":
-            ifargstruedothis=15
-          break;
-          case "volume":
-            ifargstruedothis=16
-          break;
-          case "botlist":
-            ifargstruedothis=17
-          break;
-          case "help":
-            ifargstruedothis=18
-          break;
-          case "invite":
-            ifargstruedothis=19
-          break;
-          case "ping":
-            ifargstruedothis=20
-          break;
-          case "prefix":
-            ifargstruedothis=21
-          break;
-          case "uptime":
-            ifargstruedothis=22
-          break;
-          default:
-            commands.forEach((cmd) => {
-              helpEmbed.addField(
-                `**${prefix}${cmd.name}**`,
-                `${cmd.description}`,
-                true
-              );
-            });
-          if(!message.guild) {
-            if(!args[0]) {message.react(approveemoji);return message.channel.send(helpEmbed);}
-            return
-            }
-            message.react(approveemoji);
-message.channel.send(helpEmbed)
+  
+   .setColor("RANDOM");
+   helpEmbed.setTimestamp();
+   message.react(":emoji_26:")
+    return message.channel.send(helpEmbed).catch(console.error);
 
-        break;
-       }
-
-       if(ifargstruedothis>=0){
-         let aliases = commands[ifargstruedothis].aliases;
-         if(aliases === undefined || !aliases) aliases="No Aliases!";
-         let cooldown = commands[ifargstruedothis].cooldown;
-         if(cooldown === undefined || !cooldown) cooldown="No Cooldown!";
-
-
-        helpEmbed.addField(
-          `**${prefix}${commands[ifargstruedothis].name}**`,
-          `\`\`\`fix\n${commands[ifargstruedothis].edesc}\n\`\`\`\n\`${commands[ifargstruedothis].description}\``
-        );
-        helpEmbed.addField(
-          `**:notes: Aliases:**`,
-          `\`${aliases}\``
-        );
-        helpEmbed.addField(
-          `**:wrench: Cooldown:**`,
-          `\`${cooldown}\``
-        );
-        if(!message.guild) return message.author.send(helpEmbed);
-          message.author.send(helpEmbed)
-          message.channel.send( new MessageEmbed().setColor("#c219d8")
-        .setDescription(`**👍 ${message.author} Check your \`direct messages\` for a list of Commands!**`)
-          );
-       }
-
-}
-}
+  }
+};
